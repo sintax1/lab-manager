@@ -1,10 +1,10 @@
 'use strict';
 import express from 'express';
-import config from '../config/environment';
-import User from '../api/user/user.model';
+//import config from '../config/environment';
+//import User from '../api/user/user.model';
 
 // Passport Configuration
-require('./local/passport').setup(User, config);
+require('./local/passport').setup();
 
 var router = express.Router();
 

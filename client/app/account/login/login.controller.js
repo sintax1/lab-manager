@@ -2,9 +2,9 @@
 
 export default class LoginController {
   user = {
-    name: '',
-    email: '',
-    password: ''
+    server: '172.16.201.132',
+    username: 'administrator@vsphere.local',
+    password: 'P@ssword1'
   };
   errors = {
     login: undefined
@@ -23,7 +23,8 @@ export default class LoginController {
 
     if(form.$valid) {
       this.Auth.login({
-        email: this.user.email,
+        server: this.user.server,
+        username: this.user.username,
         password: this.user.password
       })
         .then(() => {

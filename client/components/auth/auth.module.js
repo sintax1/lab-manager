@@ -13,9 +13,6 @@ import {
 import {
   AuthService
 } from './auth.service';
-import {
-  UserResource
-} from './user.service';
 
 import uiRouter from 'angular-ui-router';
 
@@ -29,6 +26,5 @@ export default angular.module('labManagerApp.auth', [constants, util, ngCookies,
   .factory('authInterceptor', authInterceptor)
   .run(routerDecorator)
   .factory('Auth', AuthService)
-  .factory('User', UserResource)
   .config(['$httpProvider', addInterceptor])
   .name;

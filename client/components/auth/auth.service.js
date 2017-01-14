@@ -1,14 +1,12 @@
 'use strict';
 
+import util from 'util';
+
 class _User {
-  _id = '';
-  name = '';
-  email = '';
-  role = '';
-  $promise = undefined;
+  username = '';
 }
 
-export function AuthService($location, $http, $cookies, $q, appConfig, Util, User) {
+export function AuthService($location, $http, $cookies, $q, appConfig, Util) {
   'ngInject';
 
   var safeCb = Util.safeCb;
@@ -24,7 +22,7 @@ export function AuthService($location, $http, $cookies, $q, appConfig, Util, Use
   };
 
   if($cookies.get('token') && $location.path() !== '/logout') {
-    currentUser = User.get();
+    //currentUser = User.get();
   }
 
   var Auth = {
@@ -36,17 +34,19 @@ export function AuthService($location, $http, $cookies, $q, appConfig, Util, Use
      * @return {Promise}
      */
     login({
-      email,
+      server,
+      username,
       password
     }, callback) {
       return $http.post('/auth/local', {
-        email,
+        server,
+        username,
         password
       })
         .then(res => {
           $cookies.put('token', res.data.token);
-          currentUser = User.get();
-          return currentUser.$promise;
+          currentUser.username = res.data.username;
+          return currentUser;
         })
         .then(user => {
           safeCb(callback)(null, user);
@@ -67,46 +67,6 @@ export function AuthService($location, $http, $cookies, $q, appConfig, Util, Use
       currentUser = new _User();
     },
 
-    /**
-     * Create a new user
-     *
-     * @param  {Object}   user     - user info
-     * @param  {Function} callback - function(error, user)
-     * @return {Promise}
-     */
-    createUser(user, callback) {
-      return User.save(user, function(data) {
-        $cookies.put('token', data.token);
-        currentUser = User.get();
-        return safeCb(callback)(null, user);
-      }, function(err) {
-        Auth.logout();
-        return safeCb(callback)(err);
-      })
-        .$promise;
-    },
-
-    /**
-     * Change password
-     *
-     * @param  {String}   oldPassword
-     * @param  {String}   newPassword
-     * @param  {Function} callback    - function(error, user)
-     * @return {Promise}
-     */
-    changePassword(oldPassword, newPassword, callback) {
-      return User.changePassword({
-        id: currentUser._id
-      }, {
-        oldPassword,
-        newPassword
-      }, function() {
-        return safeCb(callback)(null);
-      }, function(err) {
-        return safeCb(callback)(err);
-      })
-        .$promise;
-    },
 
     /**
      * Gets all available info on a user
@@ -145,7 +105,7 @@ export function AuthService($location, $http, $cookies, $q, appConfig, Util, Use
     isLoggedIn(callback) {
       return Auth.getCurrentUser(undefined)
         .then(user => {
-          let is = _.get(user, 'role');
+          let is = _.get(user, 'username');
 
           safeCb(callback)(is);
           return is;
@@ -158,7 +118,7 @@ export function AuthService($location, $http, $cookies, $q, appConfig, Util, Use
      * @return {Bool}
      */
     isLoggedInSync() {
-      return !!_.get(currentUser, 'role');
+      return !!_.get(currentUser, 'username');
     },
 
     /**
