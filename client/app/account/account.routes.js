@@ -20,12 +20,5 @@ export default function routes($stateProvider) {
         Auth.logout();
         $state.go(referrer);
       }
-    })
-    .state('settings', {
-      url: '/settings',
-      template: require('./settings/settings.html'),
-      controller: 'SettingsController',
-      controllerAs: 'vm',
-      authenticate: true
     });
 }

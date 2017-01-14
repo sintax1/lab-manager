@@ -6,9 +6,8 @@ import uiRouter from 'angular-ui-router';
 
 import routing from './account.routes';
 import login from './login';
-import settings from './settings';
 
-export default angular.module('labManagerApp.account', [uiRouter, login, settings])
+export default angular.module('labManagerApp.account', [uiRouter, login])
   .config(routing)
   .run(function($rootScope) {
     'ngInject';
