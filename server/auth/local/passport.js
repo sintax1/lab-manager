@@ -4,6 +4,7 @@ import {Strategy as LocalStrategy} from 'passport-local';
 import {Client as vSphereClient} from 'vsphere-controller';
 
 import util from 'util';
+import _ from 'lodash';
 
 function localAuthenticate(req, username, password, done) {
   var server = req.body.server;
@@ -18,7 +19,17 @@ function localAuthenticate(req, username, password, done) {
   var vc = new vSphereClient(server, username, password, false);
 
   vc.once('ready', function() {
-    return done(null, {username: username, vc: vc});
+    var role = 'user';
+    vc.getUserRoles()
+      .once('result', function(roles) {
+        if(_.find(roles, {user: 'Administrators'})) {
+          role = 'admin';
+        }
+        return done(null, {username: username, vc: vc, role: role});
+      })
+      .once('error', function(err) {
+        return done(null, false, { message: err });
+      });
   })
   .once('error', function(err) {
     // Bad password

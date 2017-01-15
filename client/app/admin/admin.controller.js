@@ -2,13 +2,8 @@
 
 export default class AdminController {
   /*@ngInject*/
-  constructor(User) {
+  constructor() {
     // Use the User $resource to fetch all users
-    this.users = User.query();
-  }
-
-  delete(user) {
-    user.$remove();
-    this.users.splice(this.users.indexOf(user), 1);
+    this.users = [{username:'test'}, {username:'test2'}];
   }
 }

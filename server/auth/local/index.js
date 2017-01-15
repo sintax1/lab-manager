@@ -20,7 +20,7 @@ router.post('/', function(req, res, next) {
     }
 
     var token = signToken(user.username);
-    res.json({ token, username: user.username });
+    res.json({ token, username: user.username, role: user.role });
   })(req, res, next);
 
 });

@@ -4,6 +4,7 @@ import util from 'util';
 
 class _User {
   username = '';
+  role = '';
 }
 
 export function AuthService($location, $http, $cookies, $q, appConfig, Util) {
@@ -46,6 +47,7 @@ export function AuthService($location, $http, $cookies, $q, appConfig, Util) {
         .then(res => {
           $cookies.put('token', res.data.token);
           currentUser.username = res.data.username;
+          currentUser.role = res.data.role;
           return currentUser;
         })
         .then(user => {
