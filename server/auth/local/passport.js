@@ -18,14 +18,17 @@ function localAuthenticate(req, username, password, done) {
   var vc = new vSphereClient(server, username, password, false);
 
   vc.once('ready', function() {
-    return done(null, {username: username});
+    return done(null, {username: username, vc: vc});
   })
   .once('error', function(err) {
+    // Bad password
     if( typeof err === 'string' && err.includes('Cannot complete login due to an incorrect user name or password')) {
       return done(null, false, { message: 'Invalid Username or Password' });
+    // Host unreachable
     } else if(typeof err === 'object' && err.code === 'EHOSTUNREACH') {
       return done(null, false, { message: 'vCenter Server unreachable' });
     }
+    // Other Error
     return done(null, false, { message: err });
   });
 

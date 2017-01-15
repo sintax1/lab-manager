@@ -29,8 +29,12 @@ import socket from '../components/socket/socket.service';
 
 import './app.scss';
 
+// Added components
+import LabsComponent from './labs/labs.component';
+//
+
 angular.module('labManagerApp', [ngCookies, ngResource, ngSanitize, 'btford.socket-io', uiRouter,
-  uiBootstrap, _Auth, account, admin, navbar, footer, main, constants, socket, util
+  uiBootstrap, _Auth, account, admin, navbar, footer, main, constants, socket, util, LabsComponent
 ])
   .config(routeConfig)
   .run(function($rootScope, $location, Auth) {
